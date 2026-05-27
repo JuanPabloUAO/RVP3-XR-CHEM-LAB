@@ -4,24 +4,37 @@ public class ScoreManager : MonoBehaviour
 {
     public static ScoreManager Instance;
 
-    public int currentScore;
+    public int score = 0;
 
     private void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     public void AddScore(int amount)
     {
-        currentScore += amount;
+        score += amount;
 
-        Debug.Log("Score: " + currentScore);
+        GameEvents.OnScoreChanged?.Invoke(score);
+
+        Debug.Log("SCORE: " + score);
     }
 
     public void RemoveScore(int amount)
     {
-        currentScore -= amount;
+        score -= amount;
 
-        Debug.Log("Score: " + currentScore);
+        GameEvents.OnScoreChanged?.Invoke(score);
+
+        Debug.Log("SCORE: " + score);
     }
 }

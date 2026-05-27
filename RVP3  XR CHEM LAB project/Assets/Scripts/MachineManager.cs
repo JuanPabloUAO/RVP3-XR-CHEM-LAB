@@ -44,12 +44,14 @@ public class MachineManager : MonoBehaviour
             Debug.Log("Combinación correcta");
 
             ScoreManager.Instance.AddScore(100);
+            GameEvents.OnCorrectReaction?.Invoke();
         }
         else
         {
             Debug.Log("Combinación incorrecta");
 
             ScoreManager.Instance.RemoveScore(25);
+            GameEvents.OnCorrectReaction?.Invoke();
         }
     }
     private void Update()

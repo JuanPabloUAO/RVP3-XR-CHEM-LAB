@@ -1,64 +1,95 @@
-using UnityEngine;
 
+using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 public class MachineManager : MonoBehaviour
 {
-    public UnityEngine.XR.Interaction.Toolkit.Interactors.XRSocketInteractor socketA;
-    public UnityEngine.XR.Interaction.Toolkit.Interactors.XRSocketInteractor socketB;
+    [Header("Sockets")]
+    public XRSocketInteractor socketA;
+    public XRSocketInteractor socketB;
 
-    public void ProcessChemicals()
+    [Header("Settings")]
+    public bool hasReacted = false;
+
+    private void Update()
     {
-        if (!socketA.hasSelection || !socketB.hasSelection)
-        {
-            Debug.Log("Faltan químicos");
+        if (GameManager.Instance.CurrentState != GameState.Playing)
             return;
-        }
 
-        Chemical chemicalA =
-            socketA.firstInteractableSelected.transform.GetComponent<Chemical>();
-
-        Chemical chemicalB =
-            socketB.firstInteractableSelected.transform.GetComponent<Chemical>();
-
-        if (chemicalA == null || chemicalB == null)
-        {
-            Debug.Log("Objeto inválido");
+        if (hasReacted)
             return;
-        }
 
-        CheckCombination(chemicalA, chemicalB);
+        if (socketA.hasSelection && socketB.hasSelection)
+        {
+            Chemical chemicalA =
+                socketA.GetOldestInteractableSelected()
+                .transform.GetComponent<Chemical>();
+
+            Chemical chemicalB =
+                socketB.GetOldestInteractableSelected()
+                .transform.GetComponent<Chemical>();
+
+            if (chemicalA == null || chemicalB == null)
+                return;
+
+            EvaluateReaction(chemicalA, chemicalB);
+
+            hasReacted = true;
+
+            Invoke(nameof(ResetMachine), 2f);
+        }
     }
 
-    private void CheckCombination(Chemical a, Chemical b)
+    void EvaluateReaction(Chemical a, Chemical b)
     {
+        Debug.Log(a.chemicalType + " + " + b.chemicalType);
+
+        // CORRECT REACTION
         if (
             (a.chemicalType == ChemicalType.Red &&
              b.chemicalType == ChemicalType.Blue)
-
             ||
-
             (a.chemicalType == ChemicalType.Blue &&
              b.chemicalType == ChemicalType.Red)
         )
         {
-            Debug.Log("Combinación correcta");
+            Debug.Log("CORRECT REACTION");
 
             ScoreManager.Instance.AddScore(100);
+
             GameEvents.OnCorrectReaction?.Invoke();
         }
-        else
+
+        // TOXIC REACTION
+        else if (
+            (a.chemicalType == ChemicalType.Green &&
+             b.chemicalType == ChemicalType.Blue)
+            ||
+            (a.chemicalType == ChemicalType.Blue &&
+             b.chemicalType == ChemicalType.Green)
+        )
         {
-            Debug.Log("Combinación incorrecta");
+            Debug.Log("TOXIC GAS");
 
             ScoreManager.Instance.RemoveScore(25);
-            GameEvents.OnCorrectReaction?.Invoke();
+
+            GameEvents.OnBadReaction?.Invoke();
+        }
+
+        // FAIL REACTION
+        else
+        {
+            Debug.Log("FAILED REACTION");
+
+            ScoreManager.Instance.RemoveScore(10);
+
+            GameEvents.OnBadReaction?.Invoke();
         }
     }
-    private void Update()
+
+    void ResetMachine()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            ProcessChemicals();
-        }
+        hasReacted = false;
     }
 }

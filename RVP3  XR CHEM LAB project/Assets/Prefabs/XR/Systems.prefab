@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7553299739219447767}
   - component: {fileID: 8273166506376925744}
   - component: {fileID: 4746487936901042490}
+  - component: {fileID: 3482603446531016986}
   m_Layer: 0
   m_Name: Systems
   m_TagString: Untagged
@@ -99,3 +100,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a18eb69b42c71444bb3ff3b8ce7b82e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ChemicalManager
+--- !u!114 &3482603446531016986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3189248347412867733}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83afaa4f83de84040889e2ea3aeb0de1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ResultsManager

@@ -722,6 +722,10 @@ PrefabInstance:
       propertyPath: socketB
       value: 
       objectReference: {fileID: 903909917}
+    - target: {fileID: 1001382429427376998, guid: 6f49a1a4f413ed94c8e15080ce3295a1, type: 3}
+      propertyPath: hasReacted
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5761680768619193059, guid: 6f49a1a4f413ed94c8e15080ce3295a1, type: 3}
       propertyPath: m_Name
       value: MachineManager

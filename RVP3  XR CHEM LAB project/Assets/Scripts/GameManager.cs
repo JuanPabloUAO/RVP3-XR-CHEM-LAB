@@ -84,5 +84,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("RESULTS STATE");
 
         GameEvents.OnGameEnded?.Invoke();
+
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Results");
     }
 }
